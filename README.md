@@ -57,7 +57,7 @@ Versi berikutnya akan dikembangkan menjadi aplikasi keuangan yang lebih lengkap:
 
 ## 📸 Screenshot
 
-![Preview](assets/preview.png)
+![Preview](assets/preview.jpg)
 
 Tampilan aplikasi:
 - Dashboard keuangan
