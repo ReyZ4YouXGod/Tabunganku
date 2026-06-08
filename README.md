@@ -32,12 +32,6 @@ Aplikasi web sederhana untuk mencatat pemasukan, pengeluaran, dan target tabunga
 
 ---
 
-## 📦 Instalasi
-
-```bash
-git clone https://github.com/ReyZ4YouXGod/Tabunganku.git
-index.html
-
 
 💾 Sistem Penyimpanan
 Data disimpan secara lokal menggunakan:
