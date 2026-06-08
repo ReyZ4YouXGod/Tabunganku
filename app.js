@@ -5,16 +5,30 @@ let financeChart;
 let balanceChart;
 
 /* ======================
+SAFE INIT (INI PENTING)
+====================== */
+
+window.addEventListener("DOMContentLoaded",()=>{
+
+initTheme();
+bindEvents();
+render();
+
+});
+
+/* ======================
 THEME
 ====================== */
 
 const themes = ["dark","light","neon"];
 let currentTheme = localStorage.getItem("theme") || "dark";
 
+function initTheme(){
 document.body.setAttribute("data-theme", currentTheme);
 
-document.getElementById("themeToggle").onclick = ()=>{
-
+const btn = document.getElementById("themeToggle");
+if(btn){
+btn.onclick = ()=>{
 let index = themes.indexOf(currentTheme);
 index = (index + 1) % themes.length;
 
@@ -25,6 +39,8 @@ localStorage.setItem("theme", currentTheme);
 
 toast("Theme: " + currentTheme);
 };
+}
+}
 
 /* ======================
 UTIL
@@ -34,7 +50,7 @@ function formatRupiah(num){
 return new Intl.NumberFormat("id-ID",{
 style:"currency",
 currency:"IDR"
-}).format(num);
+}).format(num || 0);
 }
 
 function save(){
@@ -46,10 +62,15 @@ localStorage.setItem("rey_target", JSON.stringify(target));
 }
 
 function toast(msg){
+
+const box = document.getElementById("toast");
+if(!box) return;
+
 const t = document.createElement("div");
 t.className = "toast";
 t.innerText = msg;
-document.getElementById("toast").appendChild(t);
+
+box.appendChild(t);
 
 setTimeout(()=>t.remove(),3000);
 }
@@ -59,25 +80,77 @@ MODAL
 ====================== */
 
 function openModal(){
-document.getElementById("modalOverlay").classList.remove("hidden");
+const m = document.getElementById("modalOverlay");
+if(m) m.classList.remove("hidden");
 }
 
 function closeModal(){
-document.getElementById("modalOverlay").classList.add("hidden");
+const m = document.getElementById("modalOverlay");
+if(m) m.classList.add("hidden");
 }
 
 function deleteTarget(){
 openModal();
 }
 
-/* cancel */
-document.getElementById("cancelModal").onclick = ()=>{
+/* ======================
+EVENT BINDING AMAN
+====================== */
+
+function bindEvents(){
+
+const form = document.getElementById("transactionForm");
+if(form){
+form.addEventListener("submit",(e)=>{
+e.preventDefault();
+
+const note = document.getElementById("note");
+const amount = document.getElementById("amount");
+const type = document.getElementById("type");
+const category = document.getElementById("category");
+
+if(!note || !amount || !type || !category){
+toast("Form tidak lengkap");
+return;
+}
+
+const n = note.value.trim();
+const a = parseFloat(amount.value);
+
+if(!n || isNaN(a) || a <= 0){
+toast("Isi data dengan benar");
+return;
+}
+
+transactions.push({
+id:Date.now(),
+note:n,
+amount:a,
+type:type.value,
+category:category.value,
+date:new Date()
+});
+
+save();
+render();
+toast("Transaksi ditambahkan");
+
+form.reset();
+});
+}
+
+/* modal buttons */
+const cancel = document.getElementById("cancelModal");
+if(cancel){
+cancel.onclick = ()=>{
 closeModal();
 toast("Dibatalkan");
 };
+}
 
-/* confirm */
-document.getElementById("confirmModal").onclick = ()=>{
+const confirm = document.getElementById("confirmModal");
+if(confirm){
+confirm.onclick = ()=>{
 target = null;
 localStorage.removeItem("rey_target");
 saveTarget();
@@ -85,38 +158,47 @@ closeModal();
 render();
 toast("Target dihapus");
 };
+}
 
-/* ======================
-TRANSAKSI
-====================== */
+/* save target */
+const saveBtn = document.getElementById("saveTarget");
+if(saveBtn){
+saveBtn.onclick = ()=>{
 
-document.getElementById("transactionForm").addEventListener("submit",(e)=>{
-e.preventDefault();
+const name = document.getElementById("targetName");
+const amount = document.getElementById("targetAmount");
 
-const note = document.getElementById("note").value;
-const amount = parseFloat(document.getElementById("amount").value);
-const type = document.getElementById("type").value;
-const category = document.getElementById("category").value;
-
-if(!note || !amount){
-toast("Isi data dulu");
+if(!name || !amount){
+toast("Input tidak lengkap");
 return;
 }
 
-transactions.push({
-id:Date.now(),
-note,
-amount,
-type,
-category,
-date:new Date()
-});
+if(!name.value || !amount.value){
+toast("Target belum lengkap");
+return;
+}
 
-save();
+target = {
+name:name.value,
+amount:parseFloat(amount.value)
+};
+
+saveTarget();
 render();
-toast("Transaksi ditambahkan");
-e.target.reset();
-});
+toast("Target disimpan");
+};
+}
+
+/* filters */
+const search = document.getElementById("searchInput");
+const type = document.getElementById("filterType");
+const cat = document.getElementById("filterCategory");
+
+if(search) search.addEventListener("input",render);
+if(type) type.addEventListener("change",render);
+if(cat) cat.addEventListener("change",render);
+
+}
 
 /* ======================
 DELETE TRANSAKSI
@@ -134,15 +216,17 @@ FILTER
 
 function getFiltered(){
 
-const search = document.getElementById("searchInput").value.toLowerCase();
-const type = document.getElementById("filterType").value;
-const category = document.getElementById("filterCategory").value;
+const search = document.getElementById("searchInput");
+const q = search ? search.value.toLowerCase() : "";
+
+const type = document.getElementById("filterType");
+const category = document.getElementById("filterCategory");
 
 return transactions.filter(t=>{
 
-const matchSearch = t.note.toLowerCase().includes(search);
-const matchType = type === "all" || t.type === type;
-const matchCat = category === "all" || t.category === category;
+const matchSearch = t.note.toLowerCase().includes(q);
+const matchType = !type || type.value === "all" || t.type === type.value;
+const matchCat = !category || category.value === "all" || t.category === category.value;
 
 return matchSearch && matchType && matchCat;
 });
@@ -169,26 +253,6 @@ balance:income-expense
 }
 
 /* ======================
-TARGET
-====================== */
-
-document.getElementById("saveTarget").onclick=()=>{
-
-const name = document.getElementById("targetName").value;
-const amount = parseFloat(document.getElementById("targetAmount").value);
-
-if(!name || !amount){
-toast("Target belum lengkap");
-return;
-}
-
-target = {name, amount};
-saveTarget();
-render();
-toast("Target disimpan");
-};
-
-/* ======================
 RENDER
 ====================== */
 
@@ -197,13 +261,14 @@ function render(){
 const data = getFiltered();
 const c = calc();
 
-/* TOP */
-document.getElementById("incomeTotal").innerText = formatRupiah(c.income);
-document.getElementById("expenseTotal").innerText = formatRupiah(c.expense);
-document.getElementById("balance").innerText = formatRupiah(c.balance);
+/* top */
+setText("incomeTotal",formatRupiah(c.income));
+setText("expenseTotal",formatRupiah(c.expense));
+setText("balance",formatRupiah(c.balance));
 
-/* LIST */
+/* list */
 const list = document.getElementById("transactionList");
+if(list){
 list.innerHTML = "";
 
 data.slice().reverse().forEach(t=>{
@@ -228,29 +293,41 @@ ${formatRupiah(t.amount)}
 `;
 
 list.appendChild(div);
-
 });
+}
 
-/* STATS */
-document.getElementById("statTransactions").innerText = transactions.length;
-document.getElementById("statIncome").innerText = formatRupiah(c.income);
-document.getElementById("statExpense").innerText = formatRupiah(c.expense);
-document.getElementById("statSaving").innerText = formatRupiah(c.balance);
+/* stats */
+setText("statTransactions",transactions.length);
+setText("statIncome",formatRupiah(c.income));
+setText("statExpense",formatRupiah(c.expense));
+setText("statSaving",formatRupiah(c.balance));
 
-/* TARGET */
+/* target */
 if(target){
 let percent = Math.min((c.balance / target.amount) * 100,100);
 
-document.getElementById("targetTitle").innerText = target.name;
-document.getElementById("targetText").innerText = percent.toFixed(1) + "%";
-document.getElementById("progressFill").style.width = percent + "%";
+setText("targetTitle",target.name);
+setText("targetText",percent.toFixed(1)+"%");
+
+const bar = document.getElementById("progressFill");
+if(bar) bar.style.width = percent + "%";
+
 }else{
-document.getElementById("targetTitle").innerText = "Belum Ada Target";
-document.getElementById("targetText").innerText = "0%";
-document.getElementById("progressFill").style.width = "0%";
+
+setText("targetTitle","Belum Ada Target");
+setText("targetText","0%");
+
+const bar = document.getElementById("progressFill");
+if(bar) bar.style.width = "0%";
 }
 
 buildCharts();
+}
+
+/* helper aman */
+function setText(id,val){
+const el = document.getElementById(id);
+if(el) el.innerText = val;
 }
 
 /* ======================
@@ -270,7 +347,9 @@ else expense+=t.amount;
 
 if(financeChart) financeChart.destroy();
 
-financeChart = new Chart(document.getElementById("financeChart"),{
+const c1 = document.getElementById("financeChart");
+if(c1){
+financeChart = new Chart(c1,{
 type:"doughnut",
 data:{
 labels:["Pemasukan","Pengeluaran"],
@@ -280,6 +359,7 @@ backgroundColor:["#22c55e","#ef4444"]
 }]
 }
 });
+}
 
 let balance=0;
 let history=[];
@@ -291,7 +371,9 @@ history.push(balance);
 
 if(balanceChart) balanceChart.destroy();
 
-balanceChart = new Chart(document.getElementById("balanceChart"),{
+const c2 = document.getElementById("balanceChart");
+if(c2){
+balanceChart = new Chart(c2,{
 type:"line",
 data:{
 labels:transactions.map((_,i)=>i+1),
@@ -304,14 +386,4 @@ fill:true
 }
 });
 }
-
-/* ======================
-EVENT FILTER
-====================== */
-
-document.getElementById("searchInput").addEventListener("input",render);
-document.getElementById("filterType").addEventListener("change",render);
-document.getElementById("filterCategory").addEventListener("change",render);
-
-/* INIT */
-render();
+}
