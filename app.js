@@ -5,6 +5,28 @@ let financeChart;
 let balanceChart;
 
 /* ======================
+THEME
+====================== */
+
+const themes = ["dark","light","neon"];
+let currentTheme = localStorage.getItem("theme") || "dark";
+
+document.body.setAttribute("data-theme", currentTheme);
+
+document.getElementById("themeToggle").onclick = ()=>{
+
+let index = themes.indexOf(currentTheme);
+index = (index + 1) % themes.length;
+
+currentTheme = themes[index];
+
+document.body.setAttribute("data-theme", currentTheme);
+localStorage.setItem("theme", currentTheme);
+
+toast("Theme: " + currentTheme);
+};
+
+/* ======================
 UTIL
 ====================== */
 
@@ -33,7 +55,7 @@ setTimeout(()=>t.remove(),3000);
 }
 
 /* ======================
-MODAL TARGET DELETE
+MODAL
 ====================== */
 
 function openModal(){
@@ -65,7 +87,7 @@ toast("Target dihapus");
 };
 
 /* ======================
-ADD TRANSACTION
+TRANSAKSI
 ====================== */
 
 document.getElementById("transactionForm").addEventListener("submit",(e)=>{
@@ -92,12 +114,12 @@ date:new Date()
 
 save();
 render();
-toast("Transaksi masuk");
+toast("Transaksi ditambahkan");
 e.target.reset();
 });
 
 /* ======================
-DELETE TRANSACTION
+DELETE TRANSAKSI
 ====================== */
 
 function deleteTx(id){
@@ -147,7 +169,7 @@ balance:income-expense
 }
 
 /* ======================
-TARGET SAVE
+TARGET
 ====================== */
 
 document.getElementById("saveTarget").onclick=()=>{
@@ -232,7 +254,7 @@ buildCharts();
 }
 
 /* ======================
-CHARTS
+CHART
 ====================== */
 
 function buildCharts(){
@@ -281,11 +303,10 @@ fill:true
 }]
 }
 });
-
 }
 
 /* ======================
-FILTER EVENTS
+EVENT FILTER
 ====================== */
 
 document.getElementById("searchInput").addEventListener("input",render);
