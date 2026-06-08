@@ -287,8 +287,12 @@ div.className = "transaction-item";
 div.innerHTML = `
 <div>
 <strong>${t.note}</strong><br>
-<small>${t.category}</small>
+<small>${t.category}</small><br>
+<small style="opacity:0.6">
+📅 ${t.fullDate} • ⏰ ${t.time}
+</small>
 </div>
+`;
 
 <div style="text-align:right">
 <div class="${t.type}">
