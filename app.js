@@ -65,12 +65,19 @@ e.target.reset();
 });
 
 function deleteTarget(){
+
+const ok = confirm("Yakin mau hapus target tabungan ini?");
+
+if(!ok){
+toast("Dibatalkan");
+return;
+}
+
 target = null;
 localStorage.removeItem("rey_target");
 render();
 toast("Target dihapus");
 }
-
 /* ======================
 DELETE
 ====================== */
