@@ -64,14 +64,33 @@ toast("Transaksi masuk");
 e.target.reset();
 });
 
-function deleteTarget(){
-
-const ok = confirm("Yakin mau hapus target tabungan ini?");
-
-if(!ok){
-toast("Dibatalkan");
-return;
+function openModal(){
+document.getElementById("modalOverlay").classList.remove("hidden");
 }
+
+function closeModal(){
+document.getElementById("modalOverlay").classList.add("hidden");
+}
+
+/* tombol hapus target */
+function deleteTarget(){
+openModal();
+}
+
+/* cancel */
+document.getElementById("cancelModal").onclick = ()=>{
+closeModal();
+toast("Dibatalkan");
+};
+
+/* confirm hapus */
+document.getElementById("confirmModal").onclick = ()=>{
+target = null;
+localStorage.removeItem("rey_target");
+render();
+closeModal();
+toast("Target dihapus");
+};
 
 target = null;
 localStorage.removeItem("rey_target");
