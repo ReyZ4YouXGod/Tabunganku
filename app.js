@@ -64,6 +64,13 @@ toast("Transaksi masuk");
 e.target.reset();
 });
 
+function deleteTarget(){
+target = null;
+localStorage.removeItem("rey_target");
+render();
+toast("Target dihapus");
+}
+
 /* ======================
 DELETE
 ====================== */
