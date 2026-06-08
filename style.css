@@ -1,3 +1,4 @@
+/* RESET */
 *{
 margin:0;
 padding:0;
@@ -5,13 +6,27 @@ box-sizing:border-box;
 font-family:'Poppins',sans-serif;
 }
 
+/* ROOT (INI YANG KAMU KURANG) */
+:root{
+--bg:#050816;
+--card:rgba(255,255,255,0.05);
+--text:#e5e7eb;
+--muted:rgba(255,255,255,0.6);
+--input:#0f172a;
+--border:rgba(255,255,255,0.08);
+--green:#22c55e;
+--red:#ef4444;
+--blue:#3b82f6;
+}
+
+/* BODY */
 body{
 background:linear-gradient(135deg,#050816,#0b1220,#050816);
-color:#e5e7eb;
+color:var(--text);
 min-height:100vh;
 }
 
-/* APP WRAPPER */
+/* APP */
 .app{
 max-width:1200px;
 margin:auto;
@@ -50,12 +65,13 @@ justify-content:space-between;
 align-items:center;
 padding:16px 20px;
 border-radius:18px;
-background:rgba(255,255,255,0.05);
-border:1px solid rgba(255,255,255,0.08);
+background:var(--card);
+border:1px solid var(--border);
 backdrop-filter:blur(14px);
 margin-bottom:20px;
 }
 
+/* LOGO */
 .logo-area{
 display:flex;
 gap:12px;
@@ -65,16 +81,6 @@ align-items:center;
 .logo{
 font-size:30px;
 filter:drop-shadow(0 0 10px #22c55e);
-}
-
-.topbar h1{
-font-size:18px;
-font-weight:700;
-}
-
-.topbar p{
-font-size:12px;
-opacity:0.6;
 }
 
 /* BUTTON */
@@ -97,8 +103,8 @@ background:#374151;
 .hero-card{
 padding:22px;
 border-radius:22px;
-background:rgba(255,255,255,0.05);
-border:1px solid rgba(255,255,255,0.08);
+background:var(--card);
+border:1px solid var(--border);
 backdrop-filter:blur(14px);
 margin-bottom:20px;
 }
@@ -107,7 +113,7 @@ margin-bottom:20px;
 font-size:42px;
 font-weight:800;
 margin:10px 0;
-color:#22c55e;
+color:var(--green);
 text-shadow:0 0 20px rgba(34,197,94,0.3);
 }
 
@@ -122,18 +128,10 @@ margin-top:15px;
 padding:15px;
 border-radius:16px;
 background:rgba(255,255,255,0.04);
-border:1px solid rgba(255,255,255,0.06);
+border:1px solid var(--border);
 }
 
-.hero-item span{
-font-size:12px;
-opacity:0.6;
-}
-
-.hero-item h3{
-margin-top:5px;
-}
-
+/* MODAL FIX */
 .modal-overlay{
 position:fixed;
 inset:0;
@@ -155,10 +153,6 @@ border:1px solid var(--border);
 animation:pop 0.2s ease;
 }
 
-.modal h3{
-margin-bottom:10px;
-}
-
 .modal p{
 opacity:0.7;
 font-size:14px;
@@ -173,19 +167,15 @@ gap:10px;
 .modal-actions button{
 flex:1;
 padding:10px;
-border:none;
 border-radius:10px;
-cursor:pointer;
 }
 
 #cancelModal{
 background:#6b7280;
-color:white;
 }
 
 #confirmModal{
 background:#ef4444;
-color:white;
 }
 
 .hidden{
@@ -209,8 +199,8 @@ margin-bottom:20px;
 .card{
 padding:18px;
 border-radius:20px;
-background:rgba(255,255,255,0.05);
-border:1px solid rgba(255,255,255,0.08);
+background:var(--card);
+border:1px solid var(--border);
 backdrop-filter:blur(14px);
 transition:0.2s;
 }
@@ -219,7 +209,7 @@ transition:0.2s;
 transform:translateY(-3px);
 }
 
-/* FORM */
+/* INPUT */
 input,select{
 width:100%;
 padding:12px;
@@ -227,11 +217,12 @@ margin-top:8px;
 border-radius:12px;
 border:none;
 outline:none;
-background:#0f172a;
+background:var(--input);
 color:white;
-border:1px solid rgba(255,255,255,0.08);
+border:1px solid var(--border);
 }
 
+/* BUTTON PRIMARY */
 .primary-btn{
 width:100%;
 margin-top:12px;
@@ -240,7 +231,7 @@ background:linear-gradient(135deg,#22c55e,#16a34a);
 font-weight:600;
 }
 
-/* TARGET */
+/* PROGRESS */
 .progress{
 height:10px;
 background:#1f2937;
@@ -256,7 +247,7 @@ background:linear-gradient(90deg,#22c55e,#16a34a);
 transition:0.4s;
 }
 
-/* LIST */
+/* TRANSAKSI */
 .transaction-list{
 max-height:320px;
 overflow:auto;
@@ -270,12 +261,7 @@ padding:12px;
 margin-bottom:10px;
 border-radius:14px;
 background:rgba(255,255,255,0.04);
-border:1px solid rgba(255,255,255,0.06);
-transition:0.2s;
-}
-
-.transaction-item:hover{
-transform:scale(1.01);
+border:1px solid var(--border);
 }
 
 .transaction-item button{
@@ -300,7 +286,7 @@ padding:14px;
 border-radius:14px;
 text-align:center;
 background:rgba(255,255,255,0.04);
-border:1px solid rgba(255,255,255,0.06);
+border:1px solid var(--border);
 }
 
 /* FOOTER */
