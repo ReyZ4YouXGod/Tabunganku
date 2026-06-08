@@ -18,7 +18,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body>
+<body data-theme="dark">
 
 <div id="toast"></div>
 
@@ -26,6 +26,7 @@
 
 <!-- TOPBAR -->
 <header class="topbar">
+
 <div class="logo-area">
 <div class="logo">💰</div>
 
@@ -37,7 +38,8 @@
 
 <div class="header-actions">
 
-<button id="themeToggle">🌙</button>
+<!-- THEME SWITCH -->
+<button id="themeToggle">🎨 Theme</button>
 
 <button id="exportJson">Export</button>
 
@@ -47,6 +49,7 @@ Import
 </label>
 
 </div>
+
 </header>
 
 <!-- HERO -->
@@ -108,6 +111,7 @@ Tambah Transaksi
 
 </div>
 
+<!-- TARGET -->
 <div class="card">
 
 <h3>Target Tabungan</h3>
@@ -224,19 +228,6 @@ Hapus Target
 <p>© 2026 ReyMoney Premium</p>
 </footer>
 
-</div>
-
-<!-- MODAL WAJIB ADA -->
-<div id="modalOverlay" class="modal-overlay hidden">
-  <div class="modal">
-    <h3>Hapus Target?</h3>
-    <p>Target ini akan dihapus permanen.</p>
-
-    <div class="modal-actions">
-      <button id="cancelModal">Batal</button>
-      <button id="confirmModal">Hapus</button>
-    </div>
-  </div>
 </div>
 
 <script src="app.js"></script>
