@@ -4,7 +4,7 @@ Aplikasi web sederhana untuk mencatat pemasukan, pengeluaran, dan target tabunga
 
 ---
 
-## 🚀 TesRipw
+## 🚀 Demo
 > https://tabunganku-six.vercel.app
 
 ---
@@ -23,6 +23,48 @@ Aplikasi web sederhana untuk mencatat pemasukan, pengeluaran, dan target tabunga
 
 ---
 
+## 🚀 Rencana Pengembangan (Roadmap)
+
+Versi berikutnya akan dikembangkan menjadi aplikasi keuangan yang lebih lengkap:
+
+### 🔐 User System
+- Login & register
+- Data per user (multi account)
+
+### ☁️ Cloud Database
+- Integrasi Supabase / Firebase
+- Sinkronisasi antar device
+
+### 📱 PWA (Progressive Web App)
+- Bisa di-install seperti aplikasi Android
+- Offline mode support
+
+### 📊 Statistik Lanjutan
+- Analisis pengeluaran terbesar
+- Grafik per bulan & minggu
+- Prediksi saldo
+
+### 📄 Export Data
+- Export PDF
+- Export Excel
+- Backup JSON
+
+### 🤖 AI Finance Assistant
+- Analisa pengeluaran
+- Saran hemat otomatis
+- Deteksi pola boros
+
+
+## 📸 Screenshot
+
+![Preview](assets/preview.png)
+
+Tampilan aplikasi:
+- Dashboard keuangan
+- Grafik pemasukan & pengeluaran
+- Target tabungan
+- Riwayat transaksi
+
 ## 🛠️ Tech Stack
 
 ![HTML](https://img.shields.io/badge/HTML-5-orange)
@@ -31,7 +73,6 @@ Aplikasi web sederhana untuk mencatat pemasukan, pengeluaran, dan target tabunga
 ![Chart.js](https://img.shields.io/badge/Chart.js-DataViz-green)
 
 ---
-
 
 ## 💾 Sistem Penyimpanan
 
@@ -47,6 +88,7 @@ Aplikasi ini menggunakan **localStorage browser** untuk menyimpan data.
 - `rey_target` → menyimpan target tabungan
 
 ### Contoh struktur data:
+
 ```json
 {
   "id": 1710000000000,
@@ -58,46 +100,3 @@ Aplikasi ini menggunakan **localStorage browser** untuk menyimpan data.
   "time": "01:30",
   "fullDate": "09 Jun 2026"
 }
-
----
-
-## ✔️ RENCANA PENGEMBANGAN (ROADMAP)
-
-```md
-## 🚀 Rencana Pengembangan
-
-Versi berikutnya akan dikembangkan menjadi aplikasi keuangan yang lebih lengkap:
-
-### 🔐 1. User System
-- Login & register
-- Data per user (multi account)
-
-### ☁️ 2. Cloud Database
-- Integrasi Supabase / Firebase
-- Sinkronisasi antar device
-
-### 📱 3. PWA (Progressive Web App)
-- Bisa di-install seperti aplikasi Android
-- Offline mode
-
-### 📊 4. Statistik Lanjutan
-- Analisis pengeluaran terbesar
-- Grafik per bulan & minggu
-- Prediksi saldo
-
-### 📄 5. Export Data
-- Export ke PDF
-- Export Excel
-- Backup JSON
-
-### 🤖 6. AI Finance Assistant
-- Analisa pengeluaran
-- Saran hemat otomatis
-- Deteksi pola boros
-
-## 📊 Screenshot
-
-![Preview](assets/preview.jpg)
-
-
-
