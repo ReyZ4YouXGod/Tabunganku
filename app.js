@@ -122,13 +122,21 @@ toast("Isi data dengan benar");
 return;
 }
 
+const now = new Date();
+
 transactions.push({
-id:Date.now(),
-note:n,
-amount:a,
-type:type.value,
-category:category.value,
-date:new Date()
+id: Date.now(),
+note: n,
+amount: a,
+type: type.value,
+category: category.value,
+date: now.toISOString(),
+time: now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }),
+fullDate: now.toLocaleDateString("id-ID", {
+day: "2-digit",
+month: "short",
+year: "numeric"
+})
 });
 
 save();
