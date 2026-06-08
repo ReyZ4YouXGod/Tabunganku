@@ -1,7 +1,12 @@
 let transactions = JSON.parse(localStorage.getItem("rey_money")) || [];
 let target = JSON.parse(localStorage.getItem("rey_target")) || null;
 
-const el = (id) => document.getElementById(id);
+let financeChart;
+let balanceChart;
+
+/* ======================
+UTIL
+====================== */
 
 function formatRupiah(num){
 return new Intl.NumberFormat("id-ID",{
@@ -18,26 +23,29 @@ function saveTarget(){
 localStorage.setItem("rey_target", JSON.stringify(target));
 }
 
-function showToast(msg){
-const toast = document.createElement("div");
-toast.className = "toast";
-toast.innerText = msg;
-el("toast").appendChild(toast);
+function toast(msg){
+const t = document.createElement("div");
+t.className = "toast";
+t.innerText = msg;
+document.getElementById("toast").appendChild(t);
 
-setTimeout(()=>toast.remove(),3000);
+setTimeout(()=>t.remove(),3000);
 }
 
-/* ADD TRANSACTION */
-function addTransaction(e){
+/* ======================
+ADD TRANSACTION
+====================== */
+
+document.getElementById("transactionForm").addEventListener("submit",(e)=>{
 e.preventDefault();
 
-const note = el("note").value;
-const amount = parseFloat(el("amount").value);
-const type = el("type").value;
-const category = el("category").value;
+const note = document.getElementById("note").value;
+const amount = parseFloat(document.getElementById("amount").value);
+const type = document.getElementById("type").value;
+const category = document.getElementById("category").value;
 
 if(!note || !amount){
-showToast("Isi dulu yang bener");
+toast("Isi data dulu");
 return;
 }
 
@@ -47,31 +55,37 @@ note,
 amount,
 type,
 category,
-date:new Date().toISOString()
+date:new Date()
 });
 
 save();
 render();
-showToast("Transaksi ditambahkan");
+toast("Transaksi masuk");
+e.target.reset();
+});
 
-el("transactionForm").reset();
-}
+/* ======================
+DELETE
+====================== */
 
-/* DELETE */
-function deleteTransaction(id){
-transactions = transactions.filter(t => t.id !== id);
+function deleteTx(id){
+transactions = transactions.filter(t=>t.id !== id);
 save();
 render();
-showToast("Dihapus");
 }
 
-/* FILTER */
+/* ======================
+FILTER + SEARCH
+====================== */
+
 function getFiltered(){
-const search = el("searchInput")?.value?.toLowerCase() || "";
-const type = el("filterType")?.value || "all";
-const category = el("filterCategory")?.value || "all";
+
+const search = document.getElementById("searchInput").value.toLowerCase();
+const type = document.getElementById("filterType").value;
+const category = document.getElementById("filterCategory").value;
 
 return transactions.filter(t=>{
+
 const matchSearch = t.note.toLowerCase().includes(search);
 const matchType = type === "all" || t.type === type;
 const matchCat = category === "all" || t.category === category;
@@ -80,31 +94,59 @@ return matchSearch && matchType && matchCat;
 });
 }
 
-/* CALCULATE */
-function calculate(){
-let income = 0;
-let expense = 0;
+/* ======================
+CALC
+====================== */
+
+function calc(){
+
+let income=0, expense=0;
 
 transactions.forEach(t=>{
-if(t.type === "income") income += t.amount;
-else expense += t.amount;
+if(t.type==="income") income+=t.amount;
+else expense+=t.amount;
 });
 
 return {income, expense, balance:income-expense};
 }
 
-/* RENDER */
+/* ======================
+TARGET
+====================== */
+
+document.getElementById("saveTarget").onclick=()=>{
+
+const name = document.getElementById("targetName").value;
+const amount = parseFloat(document.getElementById("targetAmount").value);
+
+if(!name || !amount){
+toast("Target belum lengkap");
+return;
+}
+
+target = {name, amount};
+saveTarget();
+render();
+toast("Target disimpan");
+};
+
+/* ======================
+RENDER
+====================== */
+
 function render(){
 
-const list = el("transactionList");
-list.innerHTML = "";
-
 const data = getFiltered();
-const calc = calculate();
+const c = calc();
 
-el("incomeTotal").innerText = formatRupiah(calc.income);
-el("expenseTotal").innerText = formatRupiah(calc.expense);
-el("balance").innerText = formatRupiah(calc.balance);
+/* TOP */
+document.getElementById("incomeTotal").innerText = formatRupiah(c.income);
+document.getElementById("expenseTotal").innerText = formatRupiah(c.expense);
+document.getElementById("balance").innerText = formatRupiah(c.balance);
+
+/* LIST */
+const list = document.getElementById("transactionList");
+list.innerHTML = "";
 
 data.slice().reverse().forEach(t=>{
 
@@ -119,13 +161,11 @@ div.innerHTML = `
 
 <div style="text-align:right">
 <div class="${t.type}">
-${t.type === "income" ? "+" : "-"}
+${t.type==="income" ? "+" : "-"}
 ${formatRupiah(t.amount)}
 </div>
 
-<button onclick="deleteTransaction(${t.id})">
-Hapus
-</button>
+<button onclick="deleteTx(${t.id})">Hapus</button>
 </div>
 `;
 
@@ -133,64 +173,97 @@ list.appendChild(div);
 
 });
 
-/* stats */
-el("statTransactions").innerText = transactions.length;
-el("statIncome").innerText = formatRupiah(calc.income);
-el("statExpense").innerText = formatRupiah(calc.expense);
-el("statSaving").innerText = formatRupiah(calc.balance);
-
-/* target */
-updateTarget(calc.balance);
-}
+/* STATS */
+document.getElementById("statTransactions").innerText = transactions.length;
+document.getElementById("statIncome").innerText = formatRupiah(c.income);
+document.getElementById("statExpense").innerText = formatRupiah(c.expense);
+document.getElementById("statSaving").innerText = formatRupiah(c.balance);
 
 /* TARGET */
-function updateTarget(balance){
+if(target){
+let percent = Math.min((c.balance / target.amount) * 100,100);
 
-if(!target){
-el("targetTitle").innerText = "Belum Ada Target";
-el("targetText").innerText = "0%";
-el("progressFill").style.width = "0%";
-return;
+document.getElementById("targetTitle").innerText = target.name;
+document.getElementById("targetText").innerText = percent.toFixed(1) + "%";
+document.getElementById("progressFill").style.width = percent + "%";
+}else{
+document.getElementById("targetTitle").innerText = "Belum Ada Target";
+document.getElementById("targetText").innerText = "0%";
+document.getElementById("progressFill").style.width = "0%";
 }
 
-const percent = Math.min((balance / target.amount) * 100, 100);
-
-el("targetTitle").innerText = target.name;
-el("targetText").innerText = percent.toFixed(1) + "%";
-el("progressFill").style.width = percent + "%";
+/* CHART */
+buildCharts();
 }
 
-/* TARGET SAVE */
-function setTarget(){
-const name = el("targetName").value;
-const amount = parseFloat(el("targetAmount").value);
+/* ======================
+CHARTS
+====================== */
 
-if(!name || !amount){
-showToast("Isi target dulu");
-return;
+function buildCharts(){
+
+if(transactions.length === 0) return;
+
+/* PIE */
+let income=0, expense=0;
+
+transactions.forEach(t=>{
+if(t.type==="income") income+=t.amount;
+else expense+=t.amount;
+});
+
+if(financeChart) financeChart.destroy();
+
+financeChart = new Chart(
+document.getElementById("financeChart"),
+{
+type:"doughnut",
+data:{
+labels:["Pemasukan","Pengeluaran"],
+datasets:[{
+data:[income,expense],
+backgroundColor:["#22c55e","#ef4444"]
+}]
+}
+}
+);
+
+/* LINE */
+let balance=0;
+let history=[];
+
+transactions.forEach(t=>{
+balance += t.type==="income" ? t.amount : -t.amount;
+history.push(balance);
+});
+
+if(balanceChart) balanceChart.destroy();
+
+balanceChart = new Chart(
+document.getElementById("balanceChart"),
+{
+type:"line",
+data:{
+labels:transactions.map((_,i)=>i+1),
+datasets:[{
+label:"Saldo",
+data:history,
+borderColor:"#3b82f6",
+fill:true
+}]
+}
+}
+);
+
 }
 
-target = {name, amount};
-saveTarget();
-render();
-showToast("Target disimpan");
-}
+/* ======================
+FILTER EVENTS
+====================== */
 
-/* EVENTS */
-document.getElementById("transactionForm")
-.addEventListener("submit", addTransaction);
-
-document.getElementById("saveTarget")
-.addEventListener("click", setTarget);
-
-document.getElementById("searchInput")
-.addEventListener("input", render);
-
-document.getElementById("filterType")
-.addEventListener("change", render);
-
-document.getElementById("filterCategory")
-.addEventListener("change", render);
+document.getElementById("searchInput").addEventListener("input",render);
+document.getElementById("filterType").addEventListener("change",render);
+document.getElementById("filterCategory").addEventListener("change",render);
 
 /* INIT */
 render();
