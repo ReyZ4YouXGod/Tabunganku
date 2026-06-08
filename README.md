@@ -46,10 +46,9 @@ Tidak menggunakan backend
 Tidak ada sinkronisasi antar device
 Data bisa hilang jika browser di-reset
 
-📊 Screenshot
-Tambahkan gambar preview di sini
+## 📊 Screenshot
 
-/assets/preview.jpg
+![Preview](assets/preview.jpg)
 
 🚀 Rencana Pengembangan
 🔐 Login multi user
